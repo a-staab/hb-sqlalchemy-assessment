@@ -26,8 +26,6 @@ class Brand(db.Model):
     headquarters = db.Column(db.String(50), nullable=True)
     discontinued = db.Column(db.Integer, nullable=True)
 
-    car_models = db.relationship('Model')
-
     def __repr__(self):
         return "<Brand_id=%s and name=%s>" % (self.brand_id, self.name)
 
@@ -38,6 +36,7 @@ class Model(db.Model):
     __tablename__ = "models"
 
     model_id = db.Column(db.Integer,
+                         db.ForeignKey('awards.winner_id'),
                          primary_key=True,
                          nullable=False,
                          autoincrement=True)
@@ -47,13 +46,14 @@ class Model(db.Model):
                          nullable=False)
     name = db.Column(db.String(50), nullable=False)
 
-    brand = db.relationship('Brand')
+    brand = db.relationship("Brand", backref="models")
+    award = db.relationship("Award", backref="awards")
 
     def __repr__(self):
         return "<Model_id=%s and name=%s>" % (self.model_id, self.name)
 
 
-class Awards(db.Model):
+class Award(db.Model):
     """Car awards."""
 
     __tablename__ = "awards"
@@ -67,6 +67,8 @@ class Awards(db.Model):
                           nullable=True)
     name = db.Column(db.String(50), nullable=False)
 
+    def __repr__(self):
+        return "<Award_id=%s and name=%s>" % (self.award_id, self.name)
 
 # End Part 1
 
