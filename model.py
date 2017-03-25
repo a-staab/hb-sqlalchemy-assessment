@@ -25,6 +25,7 @@ class Brand(db.Model):
     founded = db.Column(db.Integer, nullable=True)
     headquarters = db.Column(db.String(50), nullable=True)
     discontinued = db.Column(db.Integer, nullable=True)
+
     car_models = db.relationship('Model')
 
     def __repr__(self):
@@ -45,10 +46,27 @@ class Model(db.Model):
                          db.ForeignKey('brands.brand_id'),
                          nullable=False)
     name = db.Column(db.String(50), nullable=False)
+
     brand = db.relationship('Brand')
 
     def __repr__(self):
         return "<Model_id=%s and name=%s>" % (self.model_id, self.name)
+
+
+class Awards(db.Model):
+    """Car awards."""
+
+    __tablename__ = "awards"
+
+    award_id = db.Column(db.Integer,
+                         primary_key=True,
+                         nullable=False,
+                         autoincrement=True)
+    year = db.Column(db.Integer, nullable=False)
+    winner_id = db.Column(db.Integer, db.ForeignKey('models.model_id'),
+                          nullable=True)
+    name = db.Column(db.String(50), nullable=False)
+
 
 # End Part 1
 
