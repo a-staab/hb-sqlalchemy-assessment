@@ -23,13 +23,22 @@ init_app()
 # 1. What is the datatype of the returned value of
 # ``Brand.query.filter_by(name='Ford')``?
 
+# It is a Flask SQLAlchemy BaseQuery object.
 
 
 # 2. In your own words, what is an association table, and what type of
 # relationship (many to one, many to many, one to one, etc.) does an
 # association table manage?
 
-
+# An association table is generally said to handle many-to-many relationships.
+# It's more accurate, though, to say that it manages two one-to-many
+# relationships: one with each of the two tables to which it connects. These two
+# tables, independently, have no relationship to each other. The association
+# table serves to connect them. In contrast to a middle table, it has no
+# meaningful fields of its own. It serves exclusively to create a bridge between
+# two other tables. Its data will consist of a primary key and, in pairs, the
+# primary keys of its neighbors (which, with respect to the association table
+# itself, are both therefore foreign keys).
 
 
 # -------------------------------------------------------------------
