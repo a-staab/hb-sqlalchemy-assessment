@@ -50,6 +50,7 @@ class Model(db.Model):
         return "<Model_id=%s and name=%s>" % (self.model_id, self.name)
 
 
+# Not required, but I wrote it, so here's the Award class!
 class Award(db.Model):
     """Car awards."""
 
