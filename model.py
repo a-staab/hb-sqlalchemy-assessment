@@ -18,7 +18,6 @@ class Brand(db.Model):
     __tablename__ = "brands"
 
     brand_id = db.Column(db.String(5),
-                         db.ForeignKey('models.brand_id'),
                          primary_key=True,
                          nullable=False)
     name = db.Column(db.String(50), nullable=False)
@@ -36,7 +35,6 @@ class Model(db.Model):
     __tablename__ = "models"
 
     model_id = db.Column(db.Integer,
-                         db.ForeignKey('awards.winner_id'),
                          primary_key=True,
                          nullable=False,
                          autoincrement=True)
@@ -47,7 +45,6 @@ class Model(db.Model):
     name = db.Column(db.String(50), nullable=False)
 
     brand = db.relationship("Brand", backref="models")
-    award = db.relationship("Award", backref="awards")
 
     def __repr__(self):
         return "<Model_id=%s and name=%s>" % (self.model_id, self.name)
@@ -66,6 +63,8 @@ class Award(db.Model):
     winner_id = db.Column(db.Integer, db.ForeignKey('models.model_id'),
                           nullable=True)
     name = db.Column(db.String(50), nullable=False)
+
+    model = db.relationship("Model", backref="awards")
 
     def __repr__(self):
         return "<Award_id=%s and name=%s>" % (self.award_id, self.name)
