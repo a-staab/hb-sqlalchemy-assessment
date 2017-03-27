@@ -137,27 +137,12 @@ def search_brands_by_name(mystr):
     """Returns all Brand objects corresponding to brands whose names include
     the given string."""
 
-    # Issue: Brand.query.filter(Brand.name.like('%mystr%')).all() fails because
-    # Python interprets "%m" as if it's intended for string formatting. Question
-    # is, how to properly escape?
-
-    # A possible approach using parameter substitution? Ideal in any case, to
-    # safeguard against SQL injection. Unfortunately, however, returns [] (e.g.
-    # when tested passing 'Che' for 'mystr')
-
-    # sql = "SELECT * FROM brands WHERE name LIKE :mystr"
-    # brands = db.session.execute(sql, {'mystr': mystr}).fetchall()
-    # return brands
-
-    # Further Notes:
-    # known working query: Brand.query.filter(Brand.name.like('%Che%')).all()
-    # alt known working query: SELECT * FROM brands WHERE name LIKE '%Che%';
+    return Brand.query.filter(Brand.name.contains(mystr)).all()
 
 
 def get_models_between(start_year, end_year):
     """Returns all Model objects corresponding to models made between
     start_year (inclusive) and end_year (exclusive)."""
 
-    models_in_date_range = Model.query.filter((Model.year >= start_year) &
-                                              (Model.year < end_year)).all()
-    return models_in_date_range
+    return Model.query.filter((Model.year >= start_year) &
+                              (Model.year < end_year)).all()
