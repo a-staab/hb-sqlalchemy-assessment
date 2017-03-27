@@ -153,6 +153,7 @@ def search_brands_by_name(mystr):
     # known working query: Brand.query.filter(Brand.name.like('%Che%')).all()
     # alt known working query: SELECT * FROM brands WHERE name LIKE '%Che%';
 
+
 def get_models_between(start_year, end_year):
     """Returns all Model objects corresponding to models made between
     start_year (inclusive) and end_year (exclusive)."""
