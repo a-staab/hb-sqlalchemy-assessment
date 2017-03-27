@@ -89,23 +89,74 @@ def get_model_info(year):
             print model.name, model.brand.name, "(headquarters unknown)"
 
 
-def get_brands_summary():
+def get_brands_summary(brands):
     """Prints out each brand name (once) and all of that brand's models,
     including their year, using only ONE database query."""
 
-    pass
+    # Query database for brand name, model name, and model year and filter
+    # results for brand names in argument list
+    brands = db.session.query(Brand.name, Model.name, Model.year).join(
+        Model).filter(Brand.name.in_(brands)).all()
+
+    def make_summary(brands):
+        """"From a list of tuples of brand name, model name, and year, creates a
+        dictionary whose keys are the brand name and whose values are a list of
+        corresponding tuples of model name and year."""
+
+        brands_dict = {}
+
+        # Populate dictionary by indexing first tuple in list, removing
+        # tuple from list, and repeating until list is empty
+        while brands:
+            brand_name = brands[0][0]
+            model_name = brands[0][1]
+            year = brands[0][2]
+            if brands_dict.get(brand_name, 0) == 0:
+                brands_dict[brand_name] = [(model_name, year)]
+            else:
+                brands_dict[brand_name] = brands_dict[brand_name] + [
+                    (model_name, year)]
+            brands.pop(0)
+
+        return brands_dict
+
+    def display_summary(brands_dict):
+        """Formats argument for readability and prints to console"""
+
+        for brand in brands_dict:
+            print "\n"
+            print brand + "\n"
+            for a, b in brands_dict[brand]:
+                print a, b
+        print "\n"
+
+    display_summary(make_summary(brands))
 
 
 def search_brands_by_name(mystr):
     """Returns all Brand objects corresponding to brands whose names include
     the given string."""
 
-    pass
+    # Issue: Brand.query.filter(Brand.name.like('%mystr%')).all() fails because
+    # Python interprets "%m" as if it's intended for string formatting. Question
+    # is, how to properly escape?
 
+    # A possible approach using parameter substitution? Ideal in any case, to
+    # safeguard against SQL injection. Unfortunately, however, returns [] (e.g.
+    # when tested passing 'Che' for 'mystr')
+
+    # sql = "SELECT * FROM brands WHERE name LIKE :mystr"
+    # brands = db.session.execute(sql, {'mystr': mystr}).fetchall()
+    # return brands
+
+    # Further Notes:
+    # known working query: Brand.query.filter(Brand.name.like('%Che%')).all()
+    # alt known working query: SELECT * FROM brands WHERE name LIKE '%Che%';
 
 def get_models_between(start_year, end_year):
     """Returns all Model objects corresponding to models made between
     start_year (inclusive) and end_year (exclusive)."""
 
-    pass
-
+    models_in_date_range = Model.query.filter((Model.year >= start_year) &
+                                              (Model.year < end_year)).all()
+    return models_in_date_range
